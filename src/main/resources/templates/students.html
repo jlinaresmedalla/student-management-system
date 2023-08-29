@@ -68,8 +68,9 @@
                     <td th:text="${student.lastName}"></td>
                     <td th:text="${student.email}"></td>
                     <td>
-                        <a th:href="@{edit/{id}(id=${student.id})}" class="btn btn-info">Edit</a>
+                        <a th:href="@{edit/{id}(id=${student.id})}" class="btn btn-primary">Edit</a>
                         <a th:href="@{delete/{id}(id=${student.id})}" class="btn btn-danger">Delete</a>
+                        <a th:href="@{view/{id}(id=${student.id})}" class="btn btn-info">View</a>
                     </td>
                 </tr>
             </tbody>

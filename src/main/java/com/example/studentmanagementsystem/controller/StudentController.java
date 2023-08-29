@@ -2,12 +2,15 @@ package com.example.studentmanagementsystem.controller;
 
 import com.example.studentmanagementsystem.dto.StudentDto;
 import com.example.studentmanagementsystem.service.StudentServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.Binding;
 import java.util.List;
 
 @Controller
@@ -33,29 +36,42 @@ public class StudentController {
     }
 
     @PostMapping("/all")
-    public String createStudent(@ModelAttribute("student") StudentDto student) {
+    public String createStudent(@Valid @ModelAttribute("student") StudentDto student, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("student", student);
+            return "create-student";
+        }
         studentServiceImpl.addStudent(student);
         return "redirect:/api/v1/students/all";
     }
 
-
-
-
-
-    @GetMapping("/{id}")
-    public ResponseEntity<StudentDto> getStudentById(@PathVariable Long id) {
-        return ResponseEntity.ok(studentServiceImpl.getStudentById(id));
+    @GetMapping("/edit/{id}")
+    public String editStudent(@PathVariable Long id, Model model) {
+          StudentDto student = studentServiceImpl.getStudentById(id);
+          model.addAttribute("student", student);
+          return "edit-student";
     }
 
-    @PutMapping("/{id}")
-    public String updateStudentById(@PathVariable Long id, @RequestBody StudentDto studentDto) {
-        return "";
+    @PostMapping ("/edit/{id}")
+    public String updateStudent(@PathVariable Long id, @Valid @ModelAttribute("student") StudentDto student, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("student", student);
+            return "edit-student";
+        }
+        studentServiceImpl.updateStudentById(id, student);
+        return "redirect:/api/v1/students/all";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudentById(@PathVariable Long id) {
+    @GetMapping("/delete/{id}")
+    public String deleteStudentById(@PathVariable Long id) {
         studentServiceImpl.deleteStudentById(id);
-        return ResponseEntity.ok().build();
+        return "redirect:/api/v1/students/all";
     }
 
+    @GetMapping("/view/{id}")
+    public String viewStudentById(@PathVariable Long id, Model model) {
+        StudentDto student = studentServiceImpl.getStudentById(id);
+        model.addAttribute("student", student);
+        return "view-student";
+    }
 }
