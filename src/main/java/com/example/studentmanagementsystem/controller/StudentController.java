@@ -17,12 +17,6 @@ public class StudentController {
 
     private StudentServiceImpl studentServiceImpl;
 
-    @PostMapping("/add")
-    public ResponseEntity<StudentDto> addStudent(@RequestBody StudentDto studentDto) {
-        StudentDto createdStudent = studentServiceImpl.addStudent(studentDto);
-        return ResponseEntity.ok(createdStudent);
-    }
-
     @GetMapping("/all")
     public String getAllStudents(Model model) {
         List<StudentDto> students = studentServiceImpl.getAllStudents();
@@ -30,14 +24,32 @@ public class StudentController {
         return "students";
     }
 
+    @GetMapping("/add")
+    public String addStudent(Model model) {
+        //Student model object to store student form data
+        StudentDto createdStudent = new StudentDto();
+        model.addAttribute("student", createdStudent);
+        return "create-student";
+    }
+
+    @PostMapping("/all")
+    public String createStudent(@ModelAttribute("student") StudentDto student) {
+        studentServiceImpl.addStudent(student);
+        return "redirect:/api/v1/students/all";
+    }
+
+
+
+
+
     @GetMapping("/{id}")
     public ResponseEntity<StudentDto> getStudentById(@PathVariable Long id) {
         return ResponseEntity.ok(studentServiceImpl.getStudentById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentDto> updateStudentById(@PathVariable Long id, @RequestBody StudentDto studentDto) {
-        return ResponseEntity.ok(studentServiceImpl.updateStudentById(id, studentDto));
+    public String updateStudentById(@PathVariable Long id, @RequestBody StudentDto studentDto) {
+        return "";
     }
 
     @DeleteMapping("/{id}")

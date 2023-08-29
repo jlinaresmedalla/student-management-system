@@ -15,12 +15,6 @@ public class StudentServiceImpl implements StudentService{
 
     private StudentRepository studentRepository;
 
-    @Override
-    public StudentDto addStudent(StudentDto studentDto) {
-        Student student = new Student(studentDto);
-        Student savedStudent = studentRepository.save(student);
-        return new StudentDto(savedStudent);
-    }
 
     @Override
     public List<StudentDto> getAllStudents() {
@@ -30,19 +24,24 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
+    public void addStudent(StudentDto studentDto) {
+        Student student = new Student(studentDto);
+        studentRepository.save(student);
+    }
+
+    @Override
     public StudentDto getStudentById(Long id) {
         Student student = studentRepository.findById(id).orElse(null);
         return new StudentDto(student);
     }
 
     @Override
-    public StudentDto updateStudentById(Long id, StudentDto studentDto) {
+    public void updateStudentById(Long id, StudentDto studentDto) {
         Student student = studentRepository.findById(id).orElse(null);
-        student.setFirstName(studentDto.firstName());
-        student.setLastName(studentDto.lastName());
-        student.setEmail(studentDto.email());
-        Student updatedStudent = studentRepository.save(student);
-        return new StudentDto(updatedStudent);
+        student.setFirstName(studentDto.getFirstName());
+        student.setLastName(studentDto.getLastName());
+        student.setEmail(studentDto.getEmail());
+        studentRepository.save(student);
     }
 
     @Override

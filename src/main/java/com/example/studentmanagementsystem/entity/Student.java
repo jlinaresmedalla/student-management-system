@@ -23,9 +23,9 @@ public class Student {
     private String email;
 
     public Student(StudentDto studentDto) {
-        this.firstName = studentDto.firstName();
-        this.lastName = studentDto.lastName();
-        this.email = studentDto.email();
+        this.firstName = studentDto.getFirstName();
+        this.lastName = studentDto.getLastName();
+        this.email = studentDto.getEmail();
     }
 
 }
